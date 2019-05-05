@@ -3,7 +3,7 @@
     "pages/index/main",
     "pages/logs/main"  ],
   "window": {
-    "backgroundTextStyle": "light",
+    "backgroundTextStyle": "dark",
     "navigationBarBackgroundColor": "#ff2d4a",
     "navigationBarTitleText": "优购",
     "navigationBarTextStyle": "white"

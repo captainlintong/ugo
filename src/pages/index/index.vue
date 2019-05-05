@@ -9,55 +9,107 @@
       <div class="result"></div>
     </div>
     <!-- 焦点图 -->
-    <swiper class="banner" indicator-dots indicator-color="rgba(255, 255, 255, 0.6)" indicator-active-color="#fff"
-    autoplay circular>
-      <swiper-item>
-        <img src="/static/uploads/banner1.png">
+    <swiper
+      class="banner"
+      indicator-dots
+      indicator-color="rgba(255, 255, 255, 0.6)"
+      indicator-active-color="#fff"
+      autoplay
+      circular
+    >
+      <swiper-item v-for="(list, key) in bannerList" :key="key">
+        <navigator :url="list.navigator_url">
+          <img :src="list.image_src">
+        </navigator>
       </swiper-item>
-      <swiper-item>
-        <img src="/static/uploads/banner2.png">
-      </swiper-item>
-      <swiper-item>
-        <img src="/static/uploads/banner3.png">
-      </swiper-item>
+
+
     </swiper>
     <!-- 导航 -->
     <div class="navs">
-      <navigator>
-        <img src="/static/uploads/icon_index_nav_1@2x.png">
-      </navigator>
-      <navigator>
-        <img src="/static/uploads/icon_index_nav_2@2x.png">
-      </navigator>
-      <navigator>
-        <img src="/static/uploads/icon_index_nav_3@2x.png">
-      </navigator>
-      <navigator>
-        <img src="/static/uploads/icon_index_nav_4@2x.png">
+      <navigator v-for="(item, index) in navList" :key="index" :url="item.navigator_url">
+        <img :src="item.image_src">
       </navigator>
     </div>
     <!-- 楼层 -->
     <div class="floors">
-      <div class="floor">
+      <div class="floor" v-for="(item, index) in floorsList" :key="index">
         <!-- 标题 -->
         <div class="title">
-          <img src="/static/uploads/pic_floor01_title.png">
+          <img :src="item.floor_title.image_src">
         </div>
         <!-- 图片 -->
         <div class="pics">
-          <img src="/static/uploads/pic_floor01_1@2x.png">
-          <img src="/static/uploads/pic_floor01_2@2x.png">
-          <img src="/static/uploads/pic_floor01_3@2x.png">
-          <img src="/static/uploads/pic_floor01_4@2x.png">
-          <img src="/static/uploads/pic_floor01_5@2x.png">
+          <navigator :url="list.navigator_url" v-for="(list, key) in item.product_list"  :key="key">
+            <img :src="list.image_src">
+          </navigator>
+
         </div>
       </div>
     </div>
+    <span class="gotop" v-show="!isTop" @click="goTop">顶</span>
   </div>
 </template>
 
 <script>
+import request from '@/utils/request'
 export default {
+  data () {
+    return {
+      bannerList: [],
+      navList: [],
+      floorsList: [],
+      isTop: true
+    }
+  },
+  methods: {
+    async getBanner () {
+      // let that = this
+      // mpvue.request({
+      //   url: 'https://www.zhengzhicheng.cn/api/public/v1/home/swiperdata',
+      //   method: 'get',
+      //   success: function (info) {
+      //     that.bannerList = info.data.message
+      //   }
+      // })
+      const { message } = await request({ url: 'api/public/v1/home/swiperdata' })
+      this.bannerList = message
+    },
+    async getNavs () {
+      // let that = this
+      // mpvue.request({
+      //   url: 'https://www.zhengzhicheng.cn/api/public/v1/home/catitems',
+      //   success: function (info) {
+      //     that.navList = info.data.message
+      //   }
+      // })
+      const { message } = await request({ url: 'api/public/v1/home/catitems' })
+      this.navList = message
+    },
+    async getFloors () {
+      const { message } = await request({ url: 'api/public/v1/home/floordata' })
+      this.floorsList = message
+    },
+    goTop () {
+      mpvue.pageScrollTo({
+        scrollTop: 0
+      })
+    }
+  },
+  mounted () {
+    this.getBanner()
+    this.getNavs()
+    this.getFloors()
+  },
+  onPullDownRefresh () {
+    this.getBanner()
+    this.getNavs()
+    this.getFloors()
+    mpvue.stopPullDownRefresh()
+  },
+  onPageScroll (ev) {
+    this.isTop = ev.scrollTop < 100
+  }
 }
 </script>
 
@@ -78,6 +130,10 @@ export default {
 .banner {
   width: 750rpx;
   height: 340rpx;
+  navigator {
+    width: 100%;
+    height: 100%;
+  }
 }
 /* 导航 */
 .navs {
@@ -109,11 +165,22 @@ export default {
   margin-bottom: 10rpx;
 }
 
-.floor .pics img:nth-child(2n+1) {
+.floor .pics navigator:nth-child(2n + 1) img {
   margin-right: 0;
 }
-.floor .pics img:first-child {
+.floor .pics navigator:first-child img {
   height: 386rpx;
   margin-right: 10rpx;
+}
+.gotop {
+  position: fixed;
+  bottom: 70rpx;
+  right: 30rpx;
+  width: 88rpx;
+  height: 88rpx;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 50%;
+  text-align: center;
+  line-height: 88rpx;
 }
 </style>
