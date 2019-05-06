@@ -83,7 +83,6 @@ export default {
     .sup {
       width: 196rpx;
       background-color: #f4f4f4;
-
       scroll-view {
         height: 100%;
       }
@@ -110,7 +109,6 @@ export default {
             transform: translateY(-50%)
           }
         }
-
       }
     }
     .sub {
@@ -119,7 +117,6 @@ export default {
       padding: 20rpx;
       scroll-view {
         height: 100%;
-
       }
       .thumb {
         width: 100%;
