@@ -5,97 +5,28 @@
     <div class="category">
       <!-- 顶级分类 -->
       <ul class="sup">
-        <li class="active">大家电</li>
-        <li>热门推荐</li>
-        <li>苏宁房产</li>
-        <li>手机相机</li>
-        <li>电脑办公</li>
-        <li>厨卫电器</li>
-        <li>食品酒水</li>
-        <li>居家生活</li>
-        <li>厨房家电</li>
+        <scroll-view scroll-y>
+          <li
+          :class="{active: topKey === currentIndex}"
+          v-for="(top, topKey) in categoryList"
+          :key="top.cat_id"
+          @click="getSub(topKey)"
+          >{{ top.cat_name }}</li>
+        </scroll-view>
       </ul>
       <!-- 子分类 -->
       <div class="sub">
         <scroll-view scroll-y>
           <img class="thumb" src="/static/uploads/pic_floor03_1@2x.png">
-          <div class="children">
-            <div class="title">家电</div>
+          <div class="children" v-for="(child, childKey) in sub" :key="childKey">
+            <div class="title">{{ child.cat_name }}</div>
             <div class="brands">
-              <a href="">
-                <img src="/static/uploads/pic_floor03_5@2x.png">
-                <span>曲面电视</span>
+              <a href="" v-for="(brand, brandKey) in child.children" :key="brandKey">
+                <img :src="brand.cat_icon">
+                <span>{{ brand.cat_name }}</span>
               </a>
-               <a href="">
-                <img src="/static/uploads/pic_floor03_4@2x.png">
-                <span>曲面电视</span>
-              </a>
-               <a href="">
-                <img src="/static/uploads/pic_floor03_3@2x.png">
-                <span>曲面电视</span>
-              </a>
-               <a href="">
-                <img src="/static/uploads/pic_floor03_2@2x.png">
-                <span>曲面电视</span>
-              </a>
-                <a href="">
-                <img src="/static/uploads/pic_floor03_1@2x.png">
-                <span>曲面电视</span>
-              </a>
-               <a href="">
-                <img src="/static/uploads/pic_floor03_5@2x.png">
-                <span>曲面电视</span>
-              </a>
-               <a href="">
-                <img src="/static/uploads/pic_floor03_5@2x.png">
-                <span>曲面电视</span>
-              </a>
-               <a href="">
-                <img src="/static/uploads/pic_floor03_5@2x.png">
-                <span>曲面电视</span>
-              </a>
-
             </div>
           </div>
-          <div class="children">
-            <div class="title">家电</div>
-            <div class="brands">
-              <a href="">
-                <img src="/static/uploads/pic_floor03_5@2x.png">
-                <span>曲面电视</span>
-              </a>
-               <a href="">
-                <img src="/static/uploads/pic_floor03_4@2x.png">
-                <span>曲面电视</span>
-              </a>
-               <a href="">
-                <img src="/static/uploads/pic_floor03_3@2x.png">
-                <span>曲面电视</span>
-              </a>
-               <a href="">
-                <img src="/static/uploads/pic_floor03_2@2x.png">
-                <span>曲面电视</span>
-              </a>
-                <a href="">
-                <img src="/static/uploads/pic_floor03_1@2x.png">
-                <span>曲面电视</span>
-              </a>
-               <a href="">
-                <img src="/static/uploads/pic_floor03_5@2x.png">
-                <span>曲面电视</span>
-              </a>
-               <a href="">
-                <img src="/static/uploads/pic_floor03_5@2x.png">
-                <span>曲面电视</span>
-              </a>
-               <a href="">
-                <img src="/static/uploads/pic_floor03_5@2x.png">
-                <span>曲面电视</span>
-              </a>
-
-            </div>
-          </div>
-
         </scroll-view>
       </div>
     </div>
@@ -103,10 +34,41 @@
 </template>
 
 <script>
-// import search from '@/components/search'
+import search from '@/components/search'
+import request from '@/utils/request'
 export default {
   data () {
-    return {}
+    return {
+      categoryList: [],
+      currentIndex: 0
+    }
+  },
+  components: {
+    search
+  },
+  methods: {
+    // 分类接口
+    async getCategory () {
+      const { message } = await request({
+        url: 'api/public/v1/categories'
+      })
+      this.categoryList = message
+    },
+    // 查找子分类
+    getSub (key) {
+      // 改变当前的索引值
+      this.currentIndex = key
+    }
+  },
+  computed: {
+    sub () {
+      // 当数据顶级分类获取成功，才可以
+      return this.categoryList.length && this.categoryList[this.currentIndex].children
+    }
+  },
+  mounted () {
+    // 获取分类数据
+    this.getCategory()
   }
 }
 </script>
@@ -121,10 +83,12 @@ export default {
     .sup {
       width: 196rpx;
       background-color: #f4f4f4;
-      display: flex;
-      flex-direction: column;
+
+      scroll-view {
+        height: 100%;
+      }
       li {
-        flex: 1;
+        height: 100rpx;
         font-size: 27rpx;
         color: #333;
         display: flex;

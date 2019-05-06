@@ -1,12 +1,12 @@
 <template>
-  <div class="search">
-    <!-- 搜索框 -->
-    <div class="input-box">
-      <input type="text">
+   <div class="search">
+      <!-- 搜索框 -->
+      <div class="input-box">
+        <input type="text">
+      </div>
+      <!-- 搜索结果 -->
+      <div class="result"></div>
     </div>
-    <!-- 搜索结果 -->
-    <div class="result"></div>
-  </div>
 </template>
 
 <script>
@@ -17,7 +17,7 @@ export default {
 }
 </script>
 
-<style scoped lang="less">
+<style scoped>
   .search .input-box {
   background-color: #ff2d4a;
   padding: 21rpx 16rpx;
