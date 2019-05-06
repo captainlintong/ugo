@@ -4,7 +4,7 @@
     <!-- 分类 -->
     <div class="category">
       <!-- 顶级分类 -->
-      <ul class="sup">
+      <ul class="sup" v-show="categoryList.length">
         <scroll-view scroll-y>
           <li
           :class="{active: topKey === currentIndex}"
@@ -17,7 +17,7 @@
       <!-- 子分类 -->
       <div class="sub">
         <scroll-view scroll-y>
-          <img class="thumb" src="/static/uploads/pic_floor03_1@2x.png">
+          <img class="thumb" src="/static/uploads/pic_floor03_1@2x.png" v-show="categoryList.length">
           <div class="children" v-for="(child, childKey) in sub" :key="childKey">
             <div class="title">{{ child.cat_name }}</div>
             <div class="brands">
