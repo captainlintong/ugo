@@ -17,7 +17,7 @@
       <!-- 子分类 -->
       <div class="sub">
         <scroll-view scroll-y>
-          <img class="thumb" src="/static/uploads/pic_floor03_1@2x.png" v-show="categoryList.length">
+          <img class="thumb" src="/static/uploads/category.png" v-show="categoryList.length">
           <div class="children" v-for="(child, childKey) in sub" :key="childKey">
             <div class="title">{{ child.cat_name }}</div>
             <div class="brands">
